@@ -19,5 +19,12 @@
     "author": "F. Scott Fitzgerald",
     "price": 11.5,
     "in_stock": false
+  },
+  {
+    "id": "3b1f9f01",
+    "title": "Lodox Denoising",
+    "author": "Travimadox Webb",
+    "price": 45.0,
+    "in_stock": true
   }
-] 
+]

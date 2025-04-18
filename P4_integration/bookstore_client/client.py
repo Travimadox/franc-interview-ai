@@ -95,11 +95,12 @@ def get_book_by_id(book_id):
 
     #Intiate the GET request with error handling
     try:
-        response = response.get(f"{BOOKS_ENDPOINT}/{book_id}",timeout = 5)
+        response = requests.get(f"{BOOKS_ENDPOINT}/{book_id}",timeout = 5)
         response.raise_for_status()
         return response.json()
     
     except requests.exceptions.HTTPError as err:
+        
         if response.status_code == 404:
             return {
                 'error': f"Book with ID '{book_id}' not found",
@@ -133,20 +134,29 @@ def get_book_by_id(book_id):
             'error': "Received invalid response from server",
             'status_code': None
         }
-    pass
+    
 
 def display_book_details():
     """Display details for a specific book."""
-    book_id = input("Enter book ID: ")
+    #book_id = input("Enter book ID: ")
+    while True:
+        book_id = input("Enter book ID: ").strip()
+        if book_id:
+            break
+        print("Book Id cannot be empty")
     
     # TODO: Implement this functionality
     # 1. Call get_book_by_id function
     # 2. Display the book details or error message
     #print_error("This functionality is not implemented yet.")
-    if isinstance(get_book_by_id(book_id), dict):#check if actual boo details are returned otherwise error message
-        print(format_book_table(get_book_by_id(book_id)))
+    response_book = get_book_by_id(book_id)
+
+    if isinstance(response_book, dict) and 'title' in response_book:#check if actual boo details are returned otherwise error message
+       print(format_book_table(response_book))
     else:
-        print(get_book_by_id(book_id))
+        print(response_book)
+   
+    
 
 # TODO: Implement the add_book function
 def add_book():
@@ -172,11 +182,10 @@ def add_book():
 
     # Get and validate book author
     while True:
-        author = input("Enter the book's author: ")
+        author = input("Enter the book's author: ").strip()
         if author:
             break
-
-    print("Error: Book Author cannot be empty\n")
+        print("Error: Book Author cannot be empty\n")
 
     # Validate and convert price
     try:
