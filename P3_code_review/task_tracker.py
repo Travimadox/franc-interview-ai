@@ -105,11 +105,12 @@ def view_all_tasks():
     #print("-" * 40)
     #for task_id, task in tasks.items():
     #   print(f"{task_id} | {task['title']} | {task['due_date']} | {task['status']}")
-
-    print(f"{'ID':<5} {'Title':<20} {'Due Date':<15} {'Status':<10}")
-    print("-" * 50)
+    print(f"{'ID':<40} {'Title':<20} {'Due Date':<15} {'Status':<10}")
+    print("-" * 85)  # Matches total header width (40 + 20 + 15 + 10 + 3 spaces)
     for task_id, task in tasks.items():
-        print(f"{task_id:<5} {task['title']:<20} {task['due_date']:<15} {task['status']:<10}")
+        print(f"{task_id:<40} {task['title']:<20} {task['due_date']:<15} {task['status']:<10}")
+
+  
 
 def view_task():
     """View details of a specific task."""
@@ -119,7 +120,7 @@ def view_task():
     
     # Bug: Missing validation for non-existent task IDs
     if task_id not in tasks:
-        print(f"Task {task_id} not found.")
+        print(f"Task {task_id} not found as it does not exist.")
         return
     
     task = tasks[task_id]
@@ -137,7 +138,7 @@ def update_task():
     
     # Bug: Missing validation for non-existent task IDs
     if task_id not in tasks:
-        print(f"Task {task_id} not found.")
+        print(f"Task {task_id} not found as it does not exist.")
         return
     
     task = tasks[task_id]
