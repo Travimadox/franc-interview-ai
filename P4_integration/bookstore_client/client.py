@@ -91,12 +91,11 @@ def get_book_by_id(book_id):
     # 2. Handle any errors that might occur
     # 3. Return the book data if successful
     # API endpoint
-    base_url = "http://localhost:5000"
-    url = f"{base_url}/api/books/{book_id}"
+    #url = f"{BOOKS_ENDPOINT}/{book_id}"
 
     #Intiate the GET request with error handling
     try:
-        response = response.get(url,timeout = 5)
+        response = response.get(f"{BOOKS_ENDPOINT}/{book_id}",timeout = 5)
         response.raise_for_status()
         return response.json()
     
@@ -144,7 +143,10 @@ def display_book_details():
     # 1. Call get_book_by_id function
     # 2. Display the book details or error message
     #print_error("This functionality is not implemented yet.")
-    print(get_book_by_id(book_id))
+    if isinstance(get_book_by_id(book_id), dict):#check if actual boo details are returned otherwise error message
+        print(format_book_table(get_book_by_id(book_id)))
+    else:
+        print(get_book_by_id(book_id))
 
 # TODO: Implement the add_book function
 def add_book():
@@ -195,14 +197,11 @@ def add_book():
         'in_stock': in_stock  # Match the API's expected field name
     }
 
-    # API endpoint
-    base_url = "http://localhost:5000"
-    url = f"{base_url}/api/books"
 
     try:
         # Send POST request with JSON data
         response = requests.post(
-            url,
+            BOOKS_ENDPOINT,
             json=data,  # Automatically sets Content-Type to application/json
             timeout=10  # 10-second timeout
         )
@@ -266,7 +265,7 @@ def update_book():
 
     # First get existing book data
     try:
-        response = requests.get(f"http://localhost:5000/api/books/{book_id}", timeout=5)
+        response = requests.get(f"{BOOKS_ENDPOINT}/{book_id}", timeout=5)
         response.raise_for_status()
         current_book = response.json()
     except requests.exceptions.HTTPError as err:
@@ -310,11 +309,11 @@ def update_book():
     updates['in_stock'] = stock_input in ['y', 'yes', 'true', '1'] if stock_input else current_book['in_stock']
 
     # Send update
-    url = f"http://localhost:5000/api/books/{book_id}"
+    #url = f"http://localhost:5000/api/books/{book_id}"
     
     try:
         response = requests.put(
-            url,
+            f"{BOOKS_ENDPOINT}/{book_id}",
             json=updates,  # Send as JSON body
             timeout=10  # Longer timeout for update operation
         )
@@ -366,7 +365,7 @@ def delete_book():
     # 4. Handle any errors and display appropriate messages
     #print_error("This functionality is not implemented yet.")
     """Delete a book from the bookstore with confirmation"""
-    base_url = "http://localhost:5000"
+    #base_url = "http://localhost:5000"
     
     # Get and validate book ID
     while True:
@@ -381,10 +380,10 @@ def delete_book():
         print("Deletion cancelled.")
         return
 
-    url = f"{base_url}/api/books/{book_id}"
+    #url = f"{base_url}/api/books/{book_id}"
     
     try:
-        response = requests.delete(url, timeout=5)
+        response = requests.delete(f"{BOOKS_ENDPOINT}/{book_id}", timeout=5)
         response.raise_for_status()
         
         result = response.json()
@@ -430,8 +429,8 @@ def search_books():
     # 4. Handle any errors and display appropriate messages or search results
     #print_error("This functionality is not implemented yet.")
     """Search books through the API endpoint"""
-    base_url = "http://localhost:5000"
-    url = f"{base_url}/api/books/search"
+    #base_url = "http://localhost:5000"
+    #url = f"{base_url}/api/books/search"
 
     # Get and validate search query
     while True:
@@ -443,7 +442,7 @@ def search_books():
     try:
         # Send search request
         response = requests.get(
-            url,
+            f"{BOOKS_ENDPOINT}/search",
             params={'query': query},
             timeout=5
         )
