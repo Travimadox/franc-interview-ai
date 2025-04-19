@@ -100,40 +100,24 @@ def get_book_by_id(book_id):
         return response.json()
     
     except requests.exceptions.HTTPError as err:
-        
-        if response.status_code == 404:
-            return {
-                'error': f"Book with ID '{book_id}' not found",
-                'status_code': 404
-            }
-        return {
-            'error': f"Server returned {response.status_code} error",
-            'status_code': response.status_code
-        }
+        print(f"Server returned Error: {str(err)})")
+        return None
         
     except requests.exceptions.ConnectionError:
-        return {
-            'error': "Could not connect to the server",
-            'status_code': None
-        }
-        
+        print("Error. Could not connect to server")
+        return None
+
     except requests.exceptions.Timeout:
-        return {
-            'error': "Request timed out (5 seconds)",
-            'status_code': None
-        }
+        print("Error. Request timed out (5 seconds)")
+        return None
         
     except requests.exceptions.RequestException as err:
-        return {
-            'error': f"Request failed: {str(err)}",
-            'status_code': None
-        }
+        print(f"Error. Request failed: {str(err)}")
+        return None
         
     except ValueError:  # Invalid JSON
-        return {
-            'error': "Received invalid response from server",
-            'status_code': None
-        }
+        print("Error. Received invalid response from server")
+        return None
     
 
 def display_book_details():
@@ -151,10 +135,10 @@ def display_book_details():
     #print_error("This functionality is not implemented yet.")
     response_book = get_book_by_id(book_id)
 
-    if isinstance(response_book, dict) and 'title' in response_book:#check if actual boo details are returned otherwise error message
-       print(format_book_table(response_book))
-    else:
+    if response_book == None:
         print(response_book)
+    else:
+        print(format_book_table(response_book))
    
     
 
@@ -224,12 +208,7 @@ def add_book():
         return result
 
     except requests.exceptions.HTTPError as err:
-        error_msg = f"Server Error ({response.status_code})"
-        if response.status_code == 400:
-            error_details = response.json().get('error', 'Invalid request format')
-            print(f"{error_msg}: {error_details}")
-        else:
-            print(f"{error_msg}: {err}")
+        print(f"Server returned Error: {str(err)})")
         return None
 
     except requests.exceptions.ConnectionError:
@@ -278,10 +257,7 @@ def update_book():
         response.raise_for_status()
         current_book = response.json()
     except requests.exceptions.HTTPError as err:
-        if response.status_code == 404:
-            print(f"Error: Book with ID '{book_id}' not found")
-        else:
-            print(f"Failed to fetch book: {err}")
+        print(f"Server returned Error: {str(err)})")
         return
     except requests.exceptions.RequestException as err:
         print(f"Network error fetching book: {err}")
@@ -337,11 +313,7 @@ def update_book():
         return updated_book
 
     except requests.exceptions.HTTPError as err:
-        if response.status_code == 400:
-            error = response.json().get('error', 'Invalid request')
-            print(f"Validation error: {error}")
-        else:
-            print(f"Server error: {err}")
+        print(f"Server returned Error: {str(err)})")
         return None
             
     except requests.exceptions.ConnectionError:
@@ -400,11 +372,7 @@ def delete_book():
         return True
 
     except requests.exceptions.HTTPError as err:
-        if response.status_code == 404:
-            error_msg = response.json().get('description', 'Book not found')
-            print(f"\nError: {error_msg}")
-        else:
-            print(f"\nHTTP Error ({response.status_code}): {err}")
+        print(f"Server returned Error: {str(err)})")
         return False
 
     except requests.exceptions.ConnectionError:
@@ -473,14 +441,7 @@ def search_books():
             print(f"   Status: {stock_status}\n")
 
     except requests.exceptions.HTTPError as err:
-        if response.status_code == 400:
-            try:
-                error_data = response.json()
-                print(f"\nError: {error_data.get('description', 'Invalid search request')}")
-            except ValueError:
-                print(f"\nError: {response.text}")
-        else:
-            print(f"\nHTTP Error ({response.status_code}): {err}")
+        print(f"Server returned Error: {str(err)})")
 
     except requests.exceptions.ConnectionError:
         print("\nError: Could not connect to the server. Check if it's running.")
