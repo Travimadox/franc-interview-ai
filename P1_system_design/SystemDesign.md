@@ -15,8 +15,8 @@ The system follows a **layered microservices architecture** to decouple concerns
 - **Data Layer**:  
   - **Relational Database**: Stores user profiles, transactions, KYC metadata.  
   - **Document Storage**: Securely stores KYC documents (e.g., IDs).  
-  - **Caching (Redis)**: Caches market data and frequently accessed user data.  
-  - **Analytics (Snowflake)**: Handles historical performance reporting.  
+  - **Caching**: Caches market data and frequently accessed user data.  
+  - **Analytics**: Handles historical performance reporting.  
 
 - **Infrastructure Layer**:  
   - **Cloud**: Hosts services with auto-scaling and redundancy.  
